@@ -110,35 +110,23 @@ class Interpreter implements Expr.Visitor<Object>,
             }
         }
 
-
         environment.define(stmt.name.lexeme, null);
-
 
         if (stmt.superclass != null) {
             environment = new Environment(environment);
             environment.define("super", superclass);
         }
 
-
         Map<String, LoxFunction> methods = new HashMap<>();
         for (Stmt.Function method : stmt.methods) {
-/* Classes interpret-methods < Classes interpreter-method-initializer
-      LoxFunction function = new LoxFunction(method, environment);
-*/
-
             LoxFunction function = new LoxFunction(method, environment,
                     method.name.lexeme.equals("init"));
 
             methods.put(method.name.lexeme, function);
         }
 
-/* Classes interpret-methods < Inheritance interpreter-construct-class
-    LoxClass klass = new LoxClass(stmt.name.lexeme, methods);
-*/
-
         LoxClass klass = new LoxClass(stmt.name.lexeme,
                 (LoxClass) superclass, methods);
-
 
         if (superclass != null) {
             environment = environment.enclosing;
